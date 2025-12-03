@@ -1,20 +1,52 @@
 <!doctype html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ts-val</title>
-  </head>
-  <body>
-    <main>
-      <section>
-        <form novalidate>
-          <label>Имя <input type="text" required></label>
-          <p role="alert" aria-live="assertive"></p>
-          <button type="submit">Отправить</button>
-        </form>
-      </section>
-    </main>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BeHappy - Валидация формы</title>
+</head>
+
+<body>
+  <main>
+    <section>
+      <!--
+        novalidate отключает стандартную валидацию браузера,
+        чтобы использовать нашу библиотеку
+      -->
+      <form novalidate>
+        <div>
+          <!--
+            label связан с input через атрибут for="name"
+            Библиотека автоматически найдет этот label
+          -->
+          <label for="name">Имя</label>
+
+          <!--
+            Поле для ввода:
+            - id="name" и name="name" - имя поля (нужно для валидации)
+            - required - поле обязательно для заполнения
+            - minlength="3" - минимальная длина 3 символа
+            Библиотека автоматически прочитает эти атрибуты
+          -->
+          <input type="text" id="name" name="name" required minlength="3"
+            style="display: block; margin: 5px 0; padding: 5px;">
+
+          <!--
+            Контейнер для показа ошибок валидации
+            role="alert" и aria-live="assertive" нужны для доступности
+            Библиотека автоматически найдет этот элемент и будет показывать здесь ошибки
+          -->
+          <p role="alert" aria-live="assertive" style="color: #dc3545; margin: 5px 0; min-height: 20px;"></p>
+        </div>
+
+        <button type="submit">Отправить</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- Подключаем TypeScript код, который настроит валидацию -->
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>
