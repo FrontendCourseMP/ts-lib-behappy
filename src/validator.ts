@@ -157,4 +157,162 @@ class FormValidatorImpl implements FormValidator {
       array: () => this.createArrayValidator(InputName),
     };
   }
+
+  /**
+  * Создаем валидатор для строковых полей
+  * Пример: validator.Input("name").string().required().min("Мало символов!")
+  */
+  private createStringValidator(InputName: string): StringValidator {
+    // Создаем конфигурацию для этого поля
+    const config: InputValidationConfig = {
+      type: "string",
+      rules: [], // Здесь будут храниться правила валидации
+    };
+    // Сохраняем конфигурацию
+    this.InputConfigs.set(InputName, config);
+
+    // Создаем объект с методами для настройки валидации
+    const validator: StringValidator = {
+      // Проверка минимальной длины
+      min: (message?: string) => {
+        // Добавляем правило валидации
+        config.rules.push({
+          name: "min",
+          // Функция, которая проверяет значение
+          validator: (value) => {
+            // Если значение не строка - ошибка
+            if (typeof value !== "string") {
+              return false;
+            }
+
+            // Получаем поле из формы
+            const Input = this.InputMetadata.get(InputName)?.element;
+            if (!Input) {
+              return false;
+            }
+
+            // Читаем минимальную длину из атрибута minlength
+            const minLengthAttr = Input.getAttribute("minlength");
+            if (minLengthAttr) {
+              const minLength = Number.parseInt(minLengthAttr, 10);
+              // Если строка пустая, не проверяем minlength (это делает required)
+              if (value.trim().length === 0) {
+                return true; // Пустая строка проверяется правилом required
+              }
+              // Проверяем: длина строки >= минимальной длины
+              return value.length >= minLength;
+            }
+
+            // Если атрибута нет, но правило min() вызвано,
+            // это означает что правило применено, но без конкретного значения
+            // В этом случае просто возвращаем true (правило не применяется)
+            // Если нужно проверить минимум, используйте атрибут minlength
+            return true;
+          },
+          message, // Сообщение об ошибке (если указано)
+        });
+        // Возвращаем validator, чтобы можно было вызывать методы цепочкой
+        return validator;
+      },
+
+      // Проверка максимальной длины
+      max: (message?: string) => {
+        config.rules.push({
+          name: "max",
+          validator: (value) => {
+            if (typeof value !== "string") {
+              return false;
+            }
+            const Input = this.InputMetadata.get(InputName)?.element;
+            if (!Input) {
+              return false;
+            }
+
+            const maxLengthAttr = Input.getAttribute("maxlength");
+            if (maxLengthAttr) {
+              const maxLength = Number.parseInt(maxLengthAttr, 10);
+              return value.length <= maxLength;
+            }
+
+            return true;
+          },
+          message,
+        });
+        return validator;
+      },
+
+      // Проверка, что поле обязательно
+      required: (message?: string) => {
+        config.rules.push({
+          name: "required",
+          validator: (value) => {
+            if (typeof value !== "string") {
+              return false;
+            }
+            const Input = this.InputMetadata.get(InputName)?.element;
+            if (!Input) {
+              return false;
+            }
+
+            // Проверяем, есть ли атрибут required
+            const isRequired = Input.hasAttribute("required");
+            if (isRequired) {
+              // Убираем пробелы и проверяем, что строка не пустая
+              return value.trim().length > 0;
+            }
+
+            // Если поле не обязательное, правило проходит
+            return true;
+          },
+          message,
+        });
+        return validator;
+      },
+
+      // Проверка email
+      email: (message?: string) => {
+        config.rules.push({
+          name: "email",
+          validator: (value) => {
+            if (typeof value !== "string") {
+              return false;
+            }
+            const Input = this.InputMetadata.get(InputName)?.element;
+            if (!Input) {
+              return false;
+            }
+
+            // Проверяем, что поле имеет type="email"
+            if (Input.type === "email") {
+              // Простая проверка формата email
+              const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+              return emailRegex.test(value);
+            }
+
+            return true;
+          },
+          message,
+        });
+        return validator;
+      },
+
+      // Проверка по регулярному выражению
+      pattern: (regex: RegExp, message?: string) => {
+        config.rules.push({
+          name: "pattern",
+          validator: (value) => {
+            if (typeof value !== "string") {
+              return false;
+            }
+            // Проверяем, соответствует ли строка регулярному выражению
+            return regex.test(value);
+          },
+          message,
+        });
+        return validator;
+      },
+    };
+
+    return validator;
+  }
 }
