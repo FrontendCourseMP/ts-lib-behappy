@@ -16,9 +16,9 @@
 
 ```ts
 import { FormValidator } from '../src/FormValidator';
-import * as v from '../src/validator';
+import * as value from '../src/validator';
 
-const validator = new FormValidator().regID('name', v.required); // регистрируем поле
+const validator = new FormValidator().regID('name', value.isString); // регистрируем поле и задаем атрибут проверки
 validator.set('name', ''); // содержание
 const results = validator.validate(); // отправить на валидацию
 ```
