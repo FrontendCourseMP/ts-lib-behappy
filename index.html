@@ -11,7 +11,7 @@
       margin: 40px auto;
     }
 
-    .field {
+    .add {
       margin-bottom: 16px;
     }
 
@@ -50,23 +50,28 @@
 <body>
   <h1>Форма</h1>
   <form id="testForm">
-    <div class="field">
+    <div class="add">
       <label for="name">Имя</label>
       <input type="text" id="name" name="name" value="Artem" />
       <div id="name-error" class="error"></div>
     </div>
-    <div class="field">
+    <div class="add">
       <label for="email">Email</label>
       <input type="email" id="email" name="email" value="artem@example" />
       <div id="email-error" class="error"></div>
     </div>
-    <div class="field">
+    <div class="add">
       <label for="password">Пароль</label>
       <input type="password" id="password" name="password" value="123" />
       <div id="password-error" class="error"></div>
     </div>
     <button type="submit">Проверить</button>
   </form>
+
+  <div id="form-valid-result"></div>
+
+  <button type="button" id="runTests">Запустить тесты</button>
+  <div id="testResults" style="margin-top: 20px; font-family: monospace;"></div>
 
   <script type="module" src="/src/main.ts"></script>
 </body>

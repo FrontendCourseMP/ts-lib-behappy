@@ -1,4 +1,5 @@
-import { ValidatorFn, ValidationResult } from './types/types';
+//Атрибуты поля которые можно проверить
+import { type ValidatorFn, type ValidationResult } from './types/types';
 
 export const isString: ValidatorFn = (value): ValidationResult =>
   typeof value === 'string' ? { valid: true, type: 'string' } : { valid: false, message: 'Должно быть строкой' };

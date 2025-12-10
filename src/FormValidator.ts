@@ -1,16 +1,16 @@
 import { type ValidatorFn, type ValidationResult } from './types/types';
 
-export type FieldRule = {
+export type addRule = {
   name: string;
   validators: ValidatorFn[];
 };
 
 export class FormValidator {
-  private rules: FieldRule[] = [];
+  private rules: addRule[] = [];
   private values: Record<string, unknown> = {};
 
   // Добавить поле + валидаторы
-  field(name: string, ...validators: ValidatorFn[]): this {
+  regID(name: string, ...validators: ValidatorFn[]): this {
     this.rules.push({ name, validators });
     return this;
   }
@@ -22,7 +22,7 @@ export class FormValidator {
   }
 
   // Валидировать одно поле
-  validateField(name: string): ValidationResult[] {
+  validateRegID(name: string): ValidationResult[] {
     const rule = this.rules.find(r => r.name === name);
     if (!rule) return [{ valid: false, message: `Поле "${name}" не зарегистрировано` }];
     const value = this.values[name] ?? '';
@@ -33,7 +33,7 @@ export class FormValidator {
   validate(): Record<string, ValidationResult[]> {
     const result: Record<string, ValidationResult[]> = {};
     for (const rule of this.rules) {
-      result[rule.name] = this.validateField(rule.name);
+      result[rule.name] = this.validateRegID(rule.name);
     }
     return result;
   }
@@ -44,20 +44,5 @@ export class FormValidator {
     return Object.values(results).every(checks =>
       checks.every(r => r.valid)
     );
-  }
-
-  // JSON
-  export(): Record<string, string[]> {
-    const mapping: Record<string, string[]> = {};
-
-    for (const rule of this.rules) {
-      const names = rule.validators.map(fn => {
-        //  беру имя функции
-        const name = fn.name || 'anonymous';
-        return name;
-      });
-      mapping[rule.name] = names;
-    }
-    return mapping;
   }
 }
