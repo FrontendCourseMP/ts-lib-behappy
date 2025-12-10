@@ -1,16 +1,5 @@
-import { runTests } from '../test/suite';
 import { FormValidator } from './FormValidator';
 import * as v from './validator';
-
-//тесты
-document.getElementById('runTests')?.addEventListener('click', async () => {
-  const resultsDiv = document.getElementById('testResults');
-  if (!resultsDiv) return;
-  resultsDiv.innerHTML = '<p>Запускаю тесты...</p>';
-  setTimeout(() => {
-    runTests();
-  }, 1000);
-});
 
 //проверка форм
 document.addEventListener('DOMContentLoaded', () => {//дом загрузится
